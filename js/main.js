@@ -1,40 +1,54 @@
 
-class Figura {
-    constructor(color) {
-        this.color = color;
-        this.area = 0;
+class Vehiculo {
+    constructor(marca, modelo, velocidad) {
+        this.marca = marca;
+        this.modelo = modelo;
+        this.velocidad = velocidad;
     }
 
-    calcularArea() {
-        return this.area;
+    acelerar() {
+        this.velocidad += 10;
+        return this.velocidad;
+    }
+
+    static convertirKmHEnMph(velocidad) {
+        return velocidad / 1.60934;
     }
 }
 
-class Rectangulo extends Figura {
-    constructor( color, largo, ancho) {
-        super(color);
-        this.largo = parseFloat(largo);
-        this.ancho = parseFloat(ancho);
+class Coche extends Vehiculo {
+    constructor(marca, modelo, velocidad, combustible) {
+        super(marca, modelo, velocidad);
+        this.combustible = combustible;
     }
 
-    calcularArea() {
-        this.area = this.largo * this.ancho;
-        return this.area;
+    acelerar() {
+        this.velocidad += 20;
+        return this.velocidad;
     }
 }
 
 document.querySelector(".btn").addEventListener("click", (e) => {
     e.preventDefault();
 
-    const color = document.querySelector("#color").value;
-    const largo = document.querySelector("#largo").value;
-    const ancho = parseFloat(document.querySelector("#ancho").value);
+    const marca = document.querySelector("#marca").value;
+    const modelo = document.querySelector("#modelo").value;
+    const velocidad = parseFloat(document.querySelector("#velocidad").value);
+    const combustible = document.querySelector("#combustible").value
 
-    const rectangulo1 = new Rectangulo(color, largo, ancho);
-    const area = rectangulo1.calcularArea();
+    const vehiculo1 = new Vehiculo(marca, modelo, velocidad);
+    vehiculo1.acelerar();
+    const velocidadVehiculoMph = Vehiculo.convertirKmHEnMph(vehiculo1.velocidad);
+
+    const coche1 = new Coche(marca, modelo, velocidad, combustible);
+    coche1.acelerar();
+    const velocidadCocheMph = Vehiculo.convertirKmHEnMph(coche1.velocidad);
 
     const result = document.createElement("p");
-    result.textContent = `El rectangulo de color ${color} tiene un área de ${area.toFixed(2)}m².`;
+    result.innerHTML = /*html*/`
+        La velocidad actual del vehículo ${marca}, ${modelo} es de ${vehiculo1.velocidad} km/h (${velocidadVehiculoMph.toFixed(2)} mph).<br><br>
+        La velocidad actual del coche ${marca}, ${modelo} con combustible ${combustible} es de ${coche1.velocidad} km/h (${velocidadCocheMph.toFixed(2)} mph).
+    `;
     document.querySelector(".result").appendChild(result);
 
     setTimeout(() => {
