@@ -10,14 +10,15 @@ class Figura {
     }
 }
 
-class Circulo extends Figura {
-    constructor(color, radio) {
+class Rectangulo extends Figura {
+    constructor( color, largo, ancho) {
         super(color);
-        this.radio = radio;
+        this.largo = parseFloat(largo);
+        this.ancho = parseFloat(ancho);
     }
 
     calcularArea() {
-        this.area = Math.PI * Math.pow(this.radio, 2);
+        this.area = this.largo * this.ancho;
         return this.area;
     }
 }
@@ -26,13 +27,14 @@ document.querySelector(".btn").addEventListener("click", (e) => {
     e.preventDefault();
 
     const color = document.querySelector("#color").value;
-    const radio = parseFloat(document.querySelector("#radio").value);
+    const largo = document.querySelector("#largo").value;
+    const ancho = parseFloat(document.querySelector("#ancho").value);
 
-    const circulo = new Circulo(color, radio);
-    const area = circulo.calcularArea();
+    const rectangulo1 = new Rectangulo(color, largo, ancho);
+    const area = rectangulo1.calcularArea();
 
     const result = document.createElement("p");
-    result.textContent = `El círculo de color ${color} tiene un área de ${area.toFixed(2)}m².`;
+    result.textContent = `El rectangulo de color ${color} tiene un área de ${area.toFixed(2)}m².`;
     document.querySelector(".result").appendChild(result);
 
     setTimeout(() => {
