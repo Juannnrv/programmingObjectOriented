@@ -1,47 +1,38 @@
-class Animal {
-    constructor(nombre, edad) {
-        this.nombre = nombre;
-        this.edad = edad;
+
+class Figura {
+    constructor(color) {
+        this.color = color;
+        this.area = 0;
     }
 
-    hacerSonido() {
-        console.log(`${this.nombre} está haciendo un sonido`);
-        
-        return `${this.nombre} está haciendo un sonido`;
+    calcularArea() {
+        return this.area;
     }
 }
 
-class Perro extends Animal {
-    constructor(nombre, edad, raza) {
-        super(nombre, edad);
-        this.raza = raza;
+class Circulo extends Figura {
+    constructor(color, radio) {
+        super(color);
+        this.radio = radio;
     }
 
-    moverCola() {
-        console.log(`está moviendo la cola.`);
-
-        return `está moviendo la cola.`;
+    calcularArea() {
+        this.area = Math.PI * Math.pow(this.radio, 2);
+        return this.area;
     }
 }
 
 document.querySelector(".btn").addEventListener("click", (e) => {
     e.preventDefault();
 
-    const nombre = document.querySelector("#name").value;
-    const edad = parseInt(document.querySelector("#age").value);
-    const raza = document.querySelector("#breed").value;
+    const color = document.querySelector("#color").value;
+    const radio = parseFloat(document.querySelector("#radio").value);
 
-    const animal1 = new Animal(nombre, edad);
-    const sonidoAnimal = animal1.hacerSonido();
-
-    const perro1 = new Perro(nombre, edad, raza);
-    const sonidoPerro = perro1.hacerSonido();
-    const accionPerro = perro1.moverCola();
+    const circulo = new Circulo(color, radio);
+    const area = circulo.calcularArea();
 
     const result = document.createElement("p");
-
-    result.textContent = raza ? `${sonidoPerro} y ${accionPerro}` : sonidoAnimal;
-
+    result.textContent = `El círculo de color ${color} tiene un área de ${area.toFixed(2)}m².`;
     document.querySelector(".result").appendChild(result);
 
     setTimeout(() => {
