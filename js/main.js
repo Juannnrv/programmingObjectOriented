@@ -1,54 +1,55 @@
 
-class Vehiculo {
-    constructor(marca, modelo, velocidad) {
-        this.marca = marca;
-        this.modelo = modelo;
-        this.velocidad = velocidad;
+class Empleado {
+    static idEmpleado = 0;
+
+    constructor(nombre, edad, sueldo) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.sueldo = sueldo;
+        this.id = Empleado.generarIdEmpleado();
     }
 
-    acelerar() {
-        this.velocidad += 10;
-        return this.velocidad;
+    calcularSalarioAnual() {
+        return this.sueldo * 12;
     }
 
-    static convertirKmHEnMph(velocidad) {
-        return velocidad / 1.60934;
+    static generarIdEmpleado() {
+        return ++Empleado.idEmpleado;
     }
 }
 
-class Coche extends Vehiculo {
-    constructor(marca, modelo, velocidad, combustible) {
-        super(marca, modelo, velocidad);
-        this.combustible = combustible;
+class Gerente extends Empleado {
+    constructor(nombre, edad, sueldo, departamento) {
+        super(nombre, edad, sueldo);
+        this.departamento = departamento;
     }
 
-    acelerar() {
-        this.velocidad += 20;
-        return this.velocidad;
+    calcularSalarioAnual() {
+        const bono = this.sueldo * 0.10;
+        return (this.sueldo + bono) * 12;
     }
 }
 
 document.querySelector(".btn").addEventListener("click", (e) => {
     e.preventDefault();
 
-    const marca = document.querySelector("#marca").value;
-    const modelo = document.querySelector("#modelo").value;
-    const velocidad = parseFloat(document.querySelector("#velocidad").value);
-    const combustible = document.querySelector("#combustible").value
-
-    const vehiculo1 = new Vehiculo(marca, modelo, velocidad);
-    vehiculo1.acelerar();
-    const velocidadVehiculoMph = Vehiculo.convertirKmHEnMph(vehiculo1.velocidad);
-
-    const coche1 = new Coche(marca, modelo, velocidad, combustible);
-    coche1.acelerar();
-    const velocidadCocheMph = Vehiculo.convertirKmHEnMph(coche1.velocidad);
+    const nombre = document.querySelector("#nombre").value;
+    const edad = parseInt(document.querySelector("#edad").value);
+    const sueldo = parseFloat(document.querySelector("#sueldo").value);
+    const departamento = document.querySelector("#departamento").value;
 
     const result = document.createElement("p");
-    result.innerHTML = /*html*/`
-        La velocidad actual del vehículo ${marca}, ${modelo} es de ${vehiculo1.velocidad} km/h (${velocidadVehiculoMph.toFixed(2)} mph).<br><br>
-        La velocidad actual del coche ${marca}, ${modelo} con combustible ${combustible} es de ${coche1.velocidad} km/h (${velocidadCocheMph.toFixed(2)} mph).
-    `;
+
+    if (departamento) { // Si se ingresó un departamento en el formulario
+        const gerente1 = new Gerente(nombre, edad, sueldo, departamento);
+        const salarioAnualGerente = gerente1.calcularSalarioAnual();
+        result.textContent = `Gerente ${gerente1.nombre}, ID: ${gerente1.id}, del departamento ${gerente1.departamento}, tiene un salario anual de ${salarioAnualGerente.toFixed(2)}.`;
+    } else {
+        const empleado1 = new Empleado(nombre, edad, sueldo);
+        const salarioAnualEmpleado = empleado1.calcularSalarioAnual();
+        result.textContent = `Empleado ${empleado1.nombre}, ID: ${empleado1.id}, tiene un salario anual de ${salarioAnualEmpleado.toFixed(2)}.`;
+    }
+
     document.querySelector(".result").appendChild(result);
 
     setTimeout(() => {
