@@ -1,68 +1,100 @@
 
-class Empleado {
-    static idEmpleado = 0;
-
-    constructor(nombre, edad, sueldo) {
+class Personaje {
+    constructor(nombre, fuerza) {
         this.nombre = nombre;
-        this.edad = edad;
-        this.sueldo = sueldo;
-        this.id = Empleado.generarIdEmpleado();
+        this.fuerza = fuerza;
     }
 
-    calcularSalarioAnual() {
-        return this.sueldo * 12;
-    }
-
-    static generarIdEmpleado() {
-        return ++Empleado.idEmpleado;
+    presentarse() {
+        return `Hola, soy ${this.nombre} y mi fuerza es de ${this.fuerza} puntos.`;
     }
 }
 
-class Gerente extends Empleado {
-    constructor(nombre, edad, sueldo, departamento) {
-        super(nombre, edad, sueldo);
-        this.departamento = departamento;
+class Jedi extends Personaje {
+    constructor(nombre, fuerza) {
+        super(nombre, fuerza);
     }
 
-    calcularSalarioAnual() {
-        const bono = this.sueldo * 0.10;
-        return (this.sueldo + bono) * 12;
+    usarFuerza() {
+        return `El Jedi está utilizando la Fuerza para proteger la galaxia.`;
+    }
+
+    entrenar() {
+        this.fuerza += 10;
     }
 }
 
-document.querySelector(".btn").addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const nombre = document.querySelector("#nombre").value;
-    const edad = parseInt(document.querySelector("#edad").value);
-    const sueldo = parseFloat(document.querySelector("#sueldo").value);
-    const departamento = document.querySelector("#departamento").value;
-
-    const result = document.createElement("p");
-
-    if (departamento) { // Si se ingresó un departamento en el formulario
-        const gerente1 = new Gerente(nombre, edad, sueldo, departamento);
-        const salarioAnualGerente = gerente1.calcularSalarioAnual();
-        result.textContent = `Gerente ${gerente1.nombre}, ID: ${gerente1.id}, del departamento ${gerente1.departamento}, tiene un salario anual de ${salarioAnualGerente.toFixed(2)}.`;
-    } else {
-        const empleado1 = new Empleado(nombre, edad, sueldo);
-        const salarioAnualEmpleado = empleado1.calcularSalarioAnual();
-        result.textContent = `Empleado ${empleado1.nombre}, ID: ${empleado1.id}, tiene un salario anual de ${salarioAnualEmpleado.toFixed(2)}.`;
+class Sith extends Personaje {
+    constructor(nombre, fuerza) {
+        super(nombre, fuerza);
     }
 
-    document.querySelector(".result").appendChild(result);
+    usarFuerza() {
+        return `El Sith está utilizando la Fuerza para conquistar la galaxia.`;
+    }
 
-    setTimeout(() => {
-        result.remove();
-    }, 5000);
+    corromper() {
+        this.fuerza -= 5;
+    }
+}
 
-    document.querySelector("#signup-form").reset();
+class MaestroJedi extends Jedi {
+    constructor(nombre, fuerza) {
+        super(nombre, fuerza);
+    }
 
-    const header = document.createElement("h2");
-    header.textContent = "Submitted!";
-    document.querySelector(".header").appendChild(header);
+    enseñar() {
+        this.fuerza += 20;
+    }
+}
 
-    setTimeout(() => {
-        header.remove();
-    }, 3000);
+const yoda = new MaestroJedi('Yoda', 100);
+const darthVader = new Sith('Darth Vader', 90);
+
+document.getElementById('yodaPresentarse').addEventListener('click', () => {
+    document.getElementById('yodaOutput').innerHTML = yoda.presentarse();
 });
+
+document.getElementById('yodaUsarFuerza').addEventListener('click', () => {
+    document.getElementById('yodaOutput').innerHTML = yoda.usarFuerza();
+});
+
+document.getElementById('yodaEnsenar').addEventListener('click', () => {
+    yoda.enseñar();
+    document.getElementById('yodaOutput').innerHTML = yoda.presentarse();
+});
+
+document.getElementById('vaderPresentarse').addEventListener('click', () => {
+    document.getElementById('vaderOutput').innerHTML = darthVader.presentarse();
+});
+
+document.getElementById('vaderUsarFuerza').addEventListener('click', () => {
+    document.getElementById('vaderOutput').innerHTML = darthVader.usarFuerza();
+});
+
+document.getElementById('vaderCorromper').addEventListener('click', () => {
+    darthVader.corromper();
+    document.getElementById('vaderOutput').innerHTML = darthVader.presentarse();
+});
+
+document.getElementById('iniciarBatalla').addEventListener('click', () => {
+    document.getElementById('batallaOutput').innerHTML = `<h2>¡Comienza la batalla!</h2>`;
+    document.getElementById('batallaOutput').innerHTML += `<p>${yoda.nombre} VS ${darthVader.nombre}</p>`;
+    
+    const resultado = batalla(yoda, darthVader);
+
+    document.getElementById('batallaOutput').innerHTML += `<p>${resultado}</p>`;
+});
+
+function batalla(personaje1, personaje2) {
+    const ataque1 = personaje1.usarFuerza();
+    const ataque2 = personaje2.usarFuerza();
+
+    if (personaje1.fuerza > personaje2.fuerza) {
+        return `${personaje1.nombre} ha ganado la batalla.`;
+    } else if (personaje2.fuerza > personaje1.fuerza) {
+        return `${personaje2.nombre} ha ganado la batalla.`;
+    } else {
+        return `¡La batalla terminó en empate!`;
+    }
+}
